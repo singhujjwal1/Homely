@@ -1,26 +1,28 @@
-import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import AddressLink from "../AddressLink";
 import PlaceGallery from "../PlaceGallery";
 import BookingDates from "../BookingDates";
 
 export default function BookingPage() {
-  const {id} = useParams();
-  const [booking,setBooking] = useState(null);
+  const { id } = useParams();
+  const [booking, setBooking] = useState(null);
   useEffect(() => {
     if (id) {
-      axios.get('http://localhost:4000/api/bookings').then(response => {
-        const foundBooking = response.data.find(({_id}) => _id === id);
-        if (foundBooking) {
-          setBooking(foundBooking);
-        }
-      });
+      axios
+        .get("https://homely-backend-ogr1.onrender.com/api/bookings")
+        .then((response) => {
+          const foundBooking = response.data.find(({ _id }) => _id === id);
+          if (foundBooking) {
+            setBooking(foundBooking);
+          }
+        });
     }
   }, [id]);
 
   if (!booking) {
-    return '';
+    return "";
   }
 
   return (
