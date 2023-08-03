@@ -20,6 +20,13 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = "fasefraw4r5r3wq45wdfgw34twdfg";
 const bucket = "dawid-booking-app";
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
