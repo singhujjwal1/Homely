@@ -1,6 +1,6 @@
 import './App.css'
 import {Route, Routes} from "react-router-dom";
-import IndexPage from "./pages/indexPage.jsx";
+import IndexPage from "./pages/IndexPage.jsx";
 import LoginPage from "./pages/LoginPage";
 import Layout from "./Layout";
 import RegisterPage from "./pages/RegisterPage";
@@ -13,7 +13,7 @@ import PlacePage from "./pages/PlacePage";
 import BookingsPage from "./pages/BookingsPage";
 import BookingPage from "./pages/BookingPage";
 
-axios.defaults.baseURL = 'http://localhost:4000';
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
 
 function App() {
