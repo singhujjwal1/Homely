@@ -18,7 +18,7 @@ const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = "fasefraw4r5r3wq45wdfgw34twdfg";
-const bucket = "dawid-booking-app";
+const bucket = "homely029test";
 
 app.use(express.json());
 app.use(cookieParser());
@@ -62,15 +62,13 @@ function getUserDataFromReq(req) {
   });
 }
 
-mongoose.connect(
-  "mongodb+srv://ujjwalsinh25:ujjwal123@cluster0.ucuhm4c.mongodb.net/?retryWrites=true&w=majority"
-);
 app.get("/api/test", (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
   res.json("test ok");
 });
 
 app.post("/api/register", async (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   const { name, email, password } = req.body;
 
   try {
@@ -86,7 +84,7 @@ app.post("/api/register", async (req, res) => {
 });
 
 app.post("/api/login", async (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
   if (userDoc) {
@@ -113,7 +111,7 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.get("/api/profile", (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -161,7 +159,7 @@ app.post(
 );
 
 app.post("/api/places", (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
   const {
     title,
@@ -195,7 +193,7 @@ app.post("/api/places", (req, res) => {
 });
 
 app.get("/api/user-places", (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     const { id } = userData;
@@ -204,13 +202,13 @@ app.get("/api/user-places", (req, res) => {
 });
 
 app.get("/api/places/:id", async (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   const { id } = req.params;
   res.json(await Place.findById(id));
 });
 
 app.put("/api/places", async (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
   const {
     id,
@@ -248,12 +246,12 @@ app.put("/api/places", async (req, res) => {
 });
 
 app.get("/api/places", async (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   res.json(await Place.find());
 });
 
 app.post("/api/bookings", async (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   const { place, checkIn, checkOut, numberOfGuests, name, phone, price } =
     req.body;
@@ -276,7 +274,7 @@ app.post("/api/bookings", async (req, res) => {
 });
 
 app.get("/api/bookings", async (req, res) => {
-  // mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   res.json(await Booking.find({ user: userData.id }).populate("place"));
 });
