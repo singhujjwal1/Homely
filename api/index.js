@@ -142,6 +142,7 @@ app.post("/api/upload-by-link", async (req, res) => {
   const result = await cloudinary.uploader.upload("/tmp/" + newName, {
     public_id: newName,
   });
+  
   res.json(result.secure_url);
 });
 
