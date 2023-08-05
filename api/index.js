@@ -12,6 +12,7 @@ const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const multer = require("multer");
 const fs = require("fs");
 const mime = require("mime-types");
+const {cloudinary, uploadMiddleware} = require("./cloudinary/index.js")
 
 require("dotenv").config();
 const app = express();
@@ -137,28 +138,26 @@ app.post("/api/upload-by-link", async (req, res) => {
     url: link,
     dest: "/tmp/" + newName,
   });
-  const url = await uploadToS3(
-    "/tmp/" + newName,
-    newName,
-    mime.lookup("/tmp/" + newName)
-  );
-  res.json(url);
+
+  const result = await cloudinary.uploader.upload("/tmp/" + newName, {
+    public_id: newName,
+  });
+  res.json(result.secure_url);
 });
 
-const photosMiddleware = multer({ dest: "/tmp" });
-app.post(
-  "/api/upload",
-  photosMiddleware.array("photos", 100),
-  async (req, res) => {
-    const uploadedFiles = [];
-    for (let i = 0; i < req.files.length; i++) {
-      const { path, originalname, mimetype } = req.files[i];
-      const url = await uploadToS3(path, originalname, mimetype);
-      uploadedFiles.push(url);
-    }
-    res.json(uploadedFiles);
+app.post("/api/upload", uploadMiddleware.array("photos", 100), async (req, res) => {
+  const uploadedFiles = [];
+  for (let i = 0; i < req.files.length; i++) {
+    const { originalname } = req.files[i];
+
+    const result = await cloudinary.uploader.upload(req.files[i].path, {
+      public_id: originalname,
+    });
+
+    uploadedFiles.push(result.secure_url);
   }
-);
+  res.json(uploadedFiles);
+});
 
 app.post("/api/places", (req, res) => {
   // mongoose.connect(process.env.MONGO_URL);

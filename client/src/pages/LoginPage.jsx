@@ -13,7 +13,10 @@ export default function LoginPage() {
     try {
       const { data } = await axios.post(
         "https://homely-backend-ogr1.onrender.com/api/login",
-        { email, password }
+        {
+          email,
+          password,
+        }
       );
       setUser(data);
       alert("Login successful");
